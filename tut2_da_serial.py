@@ -41,5 +41,4 @@ for i in range(i0, i1):
 
 # Print out the values of x and y.
 print 'x = ...\n', da.getVecArray(x)[:] # One way to do it.
-print 'y = ...\n', y_val[:] # This is equivalent.
-
+print 'y = ...\n', y_val[:] # This is equivalent.  
