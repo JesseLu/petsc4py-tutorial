@@ -1,9 +1,15 @@
-# Demonstrate using vectors and basic vector operations in PETSc.
-# For more information, consult the PETSc user manual.
+# Summary
+#     Creating and using vectors and basic vector operations in PETSc.
+# 
+# Description
+#     Vectors are a basic mathematical building block.
+# 
+# For a complete list of vector operations, consult the PETSc user manual.
+# Also look at the petsc4py/src/PETSc/Vec.pyx file for petsc4py implementation
+# details.
 
-import sys, petsc4py
-petsc4py.init(sys.argv)
-
+import petsc4py
+petsc4py.init()
 from petsc4py import PETSc
 
 n = 10 # Size of vector.
