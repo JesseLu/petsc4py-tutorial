@@ -8,22 +8,24 @@
 # Also look at the petsc4py/src/PETSc/Vec.pyx file for petsc4py implementation
 # details.
 
+import sys
 import petsc4py
-petsc4py.init()
+petsc4py.init(sys.argv)
 from petsc4py import PETSc
 
 n = 10 # Size of vector.
 
-x = PETSc.Vec().createSeq(n) # Create vector.
+x = PETSc.Vec().create() # Create vector.
+x.setSizes(n) 
+x.setType('seq') # 'seq' means sequential vector.
 
-# Obtain access to the actual elements of the vector.
-x_vals = x.getArray()
-for k in range(n):
-    x_vals[k] = k # Set elements from 0 to n-1
+x.assemblyBegin() # Needed in order to work on vector.
+x.assemblyEnd()
 
+x.setValues(range(n), range(n)) # x = [0 1 ... 9]
 x.shift(1) # x = x + 1 (add 1 to all elements in x)
 
-print 'Performing various vector operations on x, n =', n
+print 'Performing various vector operations on x =', x.getArray() 
 
 print 'Sum of elements of x =', x.sum()
 print 'Dot product with itself =', x.dot(x)
