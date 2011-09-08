@@ -15,12 +15,14 @@ from petsc4py import PETSc
 
 n = 10 # Size of vector.
 
-x = PETSc.Vec().create() # Create vector.
-x.setSizes(n) 
-x.setType('seq') # 'seq' means sequential vector.
+# x = PETSc.Vec().create() # Create vector the long way.
+# x.setSizes(n) 
+# x.setType('seq') # 'seq' means sequential vector.
+# 
+# x.assemblyBegin() # Needed in order to work on vector.
+# x.assemblyEnd()
 
-x.assemblyBegin() # Needed in order to work on vector.
-x.assemblyEnd()
+x = PETSc.Vec().createSeq(n) # Faster way to create a sequential vector.
 
 x.setValues(range(n), range(n)) # x = [0 1 ... 9]
 x.shift(1) # x = x + 1 (add 1 to all elements in x)

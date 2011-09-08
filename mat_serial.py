@@ -18,10 +18,11 @@ e.set(1)
 y = PETSc.Vec().createSeq(2) # Put answer here.
 
 # First, we'll create a dense matrix.
-A = PETSc.Mat().create()
-
-A.setType('dense') # For a list of types, see petsc4py/src/PETSc/Mat.pyx
-A.setSizes([2, 4])
+# A = PETSc.Mat().create()
+# 
+# A.setType('dense') # For a list of types, see petsc4py/src/PETSc/Mat.pyx
+# A.setSizes([2, 4])
+A = PETSc.Mat().createDense([2, 4])
 
 A.setValue(0, 0, 3) # Insert a single value into matrix.
 A.setValues([0, 1], [2, 3], [1, 1, 1, 1]) # Insert a 2x2 block of values into the matrix.
@@ -37,10 +38,11 @@ print 'A * 1 =', y.getArray()
 
 
 # Next, we'll create a sparse matrix.
-A = PETSc.Mat().create()
-
-A.setType('aij') # AIJ is PETSc's default sparse matrix format.
-A.setSizes([2, 4])
+# A = PETSc.Mat().create()
+# 
+# A.setType('aij') # AIJ is PETSc's default sparse matrix format.
+# A.setSizes([2, 4])
+A = PETSc.Mat().createAIJ([2, 4])
 
 A.setValue(1, 2, -1)
 A.setValue(0, 0, -2)

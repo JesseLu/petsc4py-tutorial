@@ -14,8 +14,16 @@ Contents
 1.  da_serial.py - work with distributed arrays on a single process.
 
 
-Issues
-======
+Current Issues
+==============
 
-1.  Write up ksp.
-1.  Write up da to include a ksp solve.
+1.  Document ksp_serial.py
+1.  Re-code da to be a 2D version of the ksp solve.
+
+
+
+Issues for Later
+================
+
+1.  Remove "long way" comments in serial codes.
+
