@@ -17,9 +17,7 @@ Contents
 Current Issues
 ==============
 
-1.  Document ksp_serial.py
 1.  Re-code da to be a 2D version of the ksp solve.
-
 
 
 Issues for Later

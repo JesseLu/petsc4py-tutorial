@@ -2,11 +2,15 @@
 #     Solving a linear system with the KSP package in PETSc.
 # 
 # Description
-#     We create the sparse linear system Ax = b and solve for x. 
+#     We create the sparse linear system Ax = b and solve for x. Different solvers can be
+#     used by including the option -ksp_type <solver>. Also, include the -ksp_monitor option
+#     to monitor progress.
+# 
+#     In particular, compare results from the following solvers:
+#         python ksp_serial.py -ksp_monitor -ksp_type chebychev
+#         python ksp_serial.py -ksp_monitor -ksp_type cg
 #
 # For more information, consult the PETSc user manual.
-# Also, look at the petsc4py/src/PETSc/Mat.pyx file, especially for a complete listing of 
-# matrix types.
 
 import petsc4py
 import sys
@@ -25,7 +29,7 @@ b.setValue(0, 1) # Set value of first element to 1.
 x = PETSc.Vec().createSeq(n)
 
 # Create the wave equation matrix.
-A = PETSc.Mat().createAIJ([n, n])
+A = PETSc.Mat().createAIJ([n, n], nnz=3) # nnz=3 since the matrix will be tridiagonal.
 
 # Insert values (the matrix is tridiagonal).
 A.setValue(0, 0, 2. - w**2)
@@ -34,17 +38,23 @@ for k in range(1, n):
     A.setValue(k-1, k, -1.) # Off-diagonal.
     A.setValue(k, k-1, -1.) # Off-diagonal.
 
-A.assemblyBegin()
+A.assemblyBegin() # Make matrices useable.
 A.assemblyEnd()
 
-# Let's solve!
+# Initialize ksp solver.
 ksp = PETSc.KSP().create()
 ksp.setOperators(A)
-ksp.setType('cg')
+
+# Allow for solver choice to be set from command line with -ksp_type <solver>.
 ksp.setFromOptions()
+print 'Solving with:', ksp.getType()
+
+# Solve!
 ksp.solve(b, x)
 
-pylab.plot(x.getArray())
-pylab.show()
+# Print results.
+print 'Converged in', ksp.getIterationNumber(), 'iterations.'
 
-# print A.getValues(range(n), range(n)), b.getArray(), b.norm(), b
+# # Use this to plot the solution (should look like a sinusoid).
+# pylab.plot(x.getArray())
+# pylab.show()
