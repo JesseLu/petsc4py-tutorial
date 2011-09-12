@@ -17,7 +17,7 @@ Contents
 Current Issues
 ==============
 
-1.  Re-code da to be a 2D version of the ksp solve.
+1.  Implement a 2D E&M solver (that will work well with both modes).
 
 
 Issues for Later
