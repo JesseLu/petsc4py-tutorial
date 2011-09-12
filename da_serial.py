@@ -1,6 +1,13 @@
 # Summary
 #     Basic use of distributed arrays communication data structures in PETSc.
 # 
+# Examples
+#     Direct solve:
+#     $ python da_serial.py -ksp_monitor -ksp_type preonly -pc_type lu
+# 
+#     Iterative solve:
+#     $ python da_serial.py -ksp_monitor -ksp_type bcgs
+# 
 # Description
 #     DAs are extremely useful when working simulations that are discretized
 #     on a structured grid. DAs don't actually hold data; instead, they are 
@@ -31,12 +38,14 @@ ny = 101
 w = 2./10. # Angular frequency of wave (2*pi / period).
 
 # Create the DA.
-da = PETSc.DA().create([nx, ny], stencil_width=1, boundary_type=('mirror', 'mirror')) 
+da = PETSc.DA().create([nx, ny], \
+                        stencil_width=1, \
+                        boundary_type=('ghosted', 'ghosted')) 
 
 # Create the rhs vector based on the DA. 
 b = da.createGlobalVec()
 b_val = da.getVecArray(b) # Obtain access to elements of b.
-b_val[50, 50] = 1; # Set bottom-left value to 1.
+b_val[50, 50] = 1; # Set central value to 1.
 
 # Create (a vector to store) the solution vector.
 x = da.createGlobalVec()
@@ -53,10 +62,10 @@ col = PETSc.Mat.Stencil()
 for j in range(j0, j1):
     for i in range(i0, i1):
         row.index = (i, j)
-        for index, value in [((i, j), -4 + w**2), \
-                             ((i-1, j), 1), \
-                             ((i+1, j), 1), \
-                             ((i, j-1), 1), \
+        for index, value in [((i, j), -4 + w**2),
+                             ((i-1, j), 1),
+                             ((i+1, j), 1),
+                             ((i, j-1), 1),
                              ((i, j+1), 1)]:
             col.index = index
             A.setValueStencil(row, col, value) # Sets a single matrix element.
@@ -69,14 +78,13 @@ ksp = PETSc.KSP().create()
 ksp.setOperators(A)
 
 # Allow for solver choice to be set from command line with -ksp_type <solver>.
-# Reccommended option: -ksp_type preonly -pc_type lu
+# Recommended option: -ksp_type preonly -pc_type lu
 ksp.setFromOptions()
 print 'Solving with:', ksp.getType()
 
 # Solve!
 ksp.solve(b, x)
 
-# Plot solution, which is wave-like, although mirror boundaries cause many
-# reflections.
+# Plot solution, which is wave-like, although boundaries cause reflections.
 pylab.contourf(da.getVecArray(x)[:])
 pylab.show()
