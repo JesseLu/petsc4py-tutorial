@@ -25,4 +25,5 @@ Issues for Later
 ================
 
 1.  Remove "long way" comments in serial codes.
+1.  Do something with the maxwell 3D code.
 
